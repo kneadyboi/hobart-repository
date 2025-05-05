@@ -1,298 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jayce, Jay & Cookie's Move to Hobart</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom right, #e0f7fa, #e8eaf6);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 800px;
-            width: 100%;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            color: #1a237e;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .today {
-            text-align: center;
-            color: #546e7a;
-            margin-bottom: 25px;
-            font-size: 18px;
-        }
-        
-        .countdown-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-yellow { background-color: #fff9c4; }
-        .card-blue { background-color: #e3f2fd; }
-        .card-green { background-color: #e8f5e9; }
-        .card-purple { background-color: #f3e5f5; }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .card-title {
-            display: flex;
-            align-items: center;
-        }
-        
-        .icon {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
-        }
-        
-        .event-name {
-            font-weight: bold;
-            color: #263238;
-            margin: 0;
-        }
-        
-        .event-date {
-            color: #546e7a;
-            font-size: 14px;
-            margin: 0;
-        }
-        
-        .event-note {
-            color: #78909c;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        
-        .days-remaining {
-            font-size: 24px;
-            font-weight: bold;
-            color: #3f51b5;
-        }
-        
-        .completed {
-            font-size: 24px;
-            font-weight: bold;
-            color: #9e9e9e;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #eceff1;
-            border-radius: 5px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            border-radius: 5px;
-            transition: width 0.5s ease-in-out;
-        }
-        
-        .progress-yellow { background-color: #ffd54f; }
-        .progress-blue { background-color: #64b5f6; }
-        .progress-green { background-color: #81c784; }
-        .progress-purple { background-color: #ba68c8; }
-        
-        .tasmania {
-            text-align: center;
-            margin-top: 30px;
-        }
-        
-        .tasmania svg {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 10px;
-        }
-        
-        .footer-text {
-            color: #004d40;
-            font-weight: 500;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Jayce, Jay & Cookie's Move to Hobart</h1>
-        </div>
-        
-        <div class="today" id="current-date">
-            Today is May 6, 2025
-        </div>
-        
-        <div class="countdown-card card-yellow">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#f9a825" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <div>
-                        <p class="event-name">Settlement weekend</p>
-                        <p class="event-date">May 30, 2025</p>
-                    </div>
-                </div>
-                <div class="days-remaining" id="days-settlement">24 days</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress progress-yellow" id="progress-settlement"></div>
-            </div>
-        </div>
-        
-        <div class="countdown-card card-blue">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                    <div>
-                        <p class="event-name">Notice to vacate Parramatta</p>
-                        <p class="event-date">June 3, 2025</p>
-                    </div>
-                </div>
-                <div class="days-remaining" id="days-notice">28 days</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress progress-blue" id="progress-notice"></div>
-            </div>
-        </div>
-        
-        <div class="countdown-card card-green">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2">
-                        <rect x="1" y="3" width="15" height="13"></rect>
-                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                    </svg>
-                    <div>
-                        <p class="event-name">Vacate Parramatta</p>
-                        <p class="event-date">June 22, 2025</p>
-                        <p class="event-note">This is the date everything must be cleared from the house</p>
-                    </div>
-                </div>
-                <div class="days-remaining" id="days-vacate">47 days</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress progress-green" id="progress-vacate"></div>
-            </div>
-        </div>
-        
-        <div class="countdown-card card-purple">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#6a1b9a" stroke-width="2">
-                        <path d="M22 2L11 13"></path>
-                        <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-                    </svg>
-                    <div>
-                        <p class="event-name">Leave Sydney for Hobart</p>
-                        <p class="event-date">June 28, 2025</p>
-                    </div>
-                </div>
-                <div class="days-remaining" id="days-leave">53 days</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress progress-purple" id="progress-leave"></div>
-            </div>
-        </div>
-        
-        <div class="tasmania">
-            <svg viewBox="0 0 100 100">
-                <path d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" 
-                fill="#3b82f6" 
-                stroke="#1e40af" 
-                stroke-width="2"/>
-            </svg>
-            <p class="footer-text">Tasmania, here we come!</p>
-        </div>
-    </div>
+import React, { useState, useEffect } from 'react';
+import { Calendar, Home, Truck, PlaneTakeoff } from 'lucide-react';
+
+// Add useEffect for document head modifications
+const useHeadTags = () => {
+  useEffect(() => {
+    // Create the meta tags for iOS full-screen mode
+    const metaTags = [
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "viewport", content: "viewport-fit=cover, user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" },
+      { name: "apple-mobile-web-app-title", content: "Hobart Move" }
+    ];
     
-    <script>
-        // Function to format date as "Month Day, Year"
-        function formatDate(date) {
-            const options = { month: 'long', day: 'numeric', year: 'numeric' };
-            return date.toLocaleDateString('en-AU', options);
-        }
-        
-        // Function to update all counters
-        function updateCounters() {
-            const today = new Date();
-            
-            // Update current date display
-            document.getElementById('current-date').textContent = 'Today is ' + formatDate(today);
-            
-            // Define event dates
-            const settlementDate = new Date('2025-05-30');
-            const noticeDate = new Date('2025-06-03');
-            const vacateDate = new Date('2025-06-22');
-            const leaveDate = new Date('2025-06-28');
-            
-            // Calculate and update days remaining for each event
-            updateDaysRemaining('days-settlement', 'progress-settlement', today, settlementDate);
-            updateDaysRemaining('days-notice', 'progress-notice', today, noticeDate);
-            updateDaysRemaining('days-vacate', 'progress-vacate', today, vacateDate);
-            updateDaysRemaining('days-leave', 'progress-leave', today, leaveDate);
-        }
-        
-        // Function to calculate days remaining and update display
-        function updateDaysRemaining(daysElementId, progressElementId, today, eventDate) {
-            const timeDiff = eventDate.getTime() - today.getTime();
-            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-            
-            const daysElement = document.getElementById(daysElementId);
-            const progressElement = document.getElementById(progressElementId);
-            
-            if (daysRemaining < 0) {
-                // Event has passed
-                daysElement.textContent = 'Complete!';
-                daysElement.className = 'completed';
-                progressElement.style.width = '100%';
-            } else {
-                // Event is upcoming
-                daysElement.textContent = daysRemaining + ' days';
+    // Add the meta tags to the document head
+    metaTags.forEach(tag => {
+      const metaTag = document.createElement('meta');
+      metaTag.setAttribute('name', tag.name);
+      metaTag.setAttribute('content', tag.content);
+      document.head.appendChild(metaTag);
+    });
+    
+    // Create link for app icon (optional but recommended)
+    const linkTag = document.createElement('link');
+    linkTag.setAttribute('rel', 'apple-touch-icon');
+    linkTag.setAttribute('href', 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="192" height="192"><rect width="100" height="100" rx="20" fill="%233b82f6" /><path d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" fill="white" stroke="%231e40af" stroke-width="2"/></svg>');
+    document.head.appendChild(linkTag);
+    
+    // Create manifest.json link
+    const manifestLink = document.createElement('link');
+    manifestLink.setAttribute('rel', 'manifest');
+    manifestLink.setAttribute('href', 'data:application/json,{"name":"Hobart Move Countdown","short_name":"Hobart Move","display":"standalone"}');
+    document.head.appendChild(manifestLink);
+    
+    // Add title
+    document.title = "Jayce, Jay & Cookie's Move to Hobart";
+    
+    // Clean up function
+    return () => {
+      metaTags.forEach(tag => {
+        const elements = document.head.querySelectorAll(`meta[name="${tag.name}"]`);
+        elements.forEach(element => element.remove());
+      });
+      document.head.querySelectorAll('link[rel="apple-touch-icon"]').forEach(el => el.remove());
+      document.head.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
+    };
+  }, []);
+};
+
+const HobartCountdown = () => {
+  // Use the custom hook to add the head tags
+  useHeadTags();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  
+  // Update the current date every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+  
+  // Define the important dates
+  const dates = [
+    { 
+      name: "Settlement weekend", 
+      date: new Date("2025-05-30"), 
+      icon: <Calendar className="text-yellow-500" />,
+      color: "bg-yellow-100",
+      darkColor: "bg-yellow-500"
+    },
+    { 
+      name: "Notice to vacate Parramatta", 
+      date: new Date("2025-06-03"), 
+      icon: <Home className="text-blue-500" />,
+      color: "bg-blue-100",
+      darkColor: "bg-blue-500"
+    },
+    { 
+      name: "Vacate Parramatta", 
+      date: new Date("2025-06-22"), 
+      icon: <Truck className="text-green-500" />,
+      color: "bg-green-100",
+      darkColor: "bg-green-500",
+      note: "This is the date everything must be cleared from the house"
+    },
+    { 
+      name: "Leave Sydney for Hobart", 
+      date: new Date("2025-06-28"), 
+      icon: <PlaneTakeoff className="text-purple-500" />,
+      color: "bg-purple-100",
+      darkColor: "bg-purple-500"
+    }
+  ];
+  
+  // Calculate days remaining for each date
+  const calculateDaysRemaining = (targetDate) => {
+    const timeDiff = targetDate.getTime() - currentDate.getTime();
+    const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return daysRemaining;
+  };
+  
+  // Format the date as DD Month YYYY
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-AU', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+  
+  return (
+    <div className="flex flex-col items-center p-8 bg-gradient-to-br from-teal-50 to-indigo-50 rounded-lg shadow-lg">
+      <h1 className="text-3xl font-bold mb-6 text-center text-indigo-900">
+        Jayce, Jay & Cookie's Move to Hobart
+      </h1>
+      
+      {/* Current date display */}
+      <div className="w-full max-w-xl text-center mb-8">
+        <p className="text-lg text-gray-600">Today is {formatDate(currentDate)}</p>
+      </div>
+      
+      {/* Countdown cards */}
+      <div className="w-full max-w-xl space-y-4">
+        {dates.map((item, index) => {
+          const daysRemaining = calculateDaysRemaining(item.date);
+          const percentComplete = 100 - (daysRemaining / 60 * 100);
+          const isPast = daysRemaining < 0;
+          
+          return (
+            <div key={index} className={`${item.color} rounded-lg p-4 shadow transition-all hover:shadow-md`}>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-3">
+                  {item.icon}
+                  <div>
+                    <h3 className="font-semibold text-gray-800">{item.name}</h3>
+                    <p className="text-sm text-gray-600">{formatDate(item.date)}</p>
+                    {item.note && <p className="text-xs text-gray-500 mt-1">{item.note}</p>}
+                  </div>
+                </div>
                 
-                // Calculate progress (assuming 60 days total window for simplicity)
-                const progressPercent = 100 - (daysRemaining / 60 * 100);
-                progressElement.style.width = Math.min(100, Math.max(0, progressPercent)) + '%';
-            }
-        }
-        
-        // Run once on page load
-        updateCounters();
-        
-        // Update every minute
-        setInterval(updateCounters, 60000);
-    </script>
-</body>
-</html>
+                <div className="flex flex-col items-end">
+                  {isPast ? (
+                    <span className="text-2xl font-bold text-gray-400">Complete!</span>
+                  ) : (
+                    <span className="text-2xl font-bold text-indigo-700">{daysRemaining} days</span>
+                  )}
+                </div>
+              </div>
+              
+              {/* Progress bar */}
+              <div className="mt-3 h-3 w-full bg-gray-200 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${item.darkColor} rounded-full transition-all duration-500 ease-in-out`}
+                  style={{ width: `${Math.min(100, Math.max(0, percentComplete))}%` }}
+                ></div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      {/* Tasmania graphic */}
+      <div className="mt-8 text-center">
+        <svg className="w-24 h-24 mx-auto text-teal-600" viewBox="0 0 100 100">
+          <path 
+            d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" 
+            fill="#3b82f6" 
+            stroke="#1e40af" 
+            strokeWidth="2"
+          />
+        </svg>
+        <p className="mt-2 text-lg font-medium text-teal-700">Tasmania, here we come!</p>
+      </div>
+    </div>
+  );
+};
+
+export default HobartCountdown;
