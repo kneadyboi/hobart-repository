@@ -1,180 +1,300 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Home, Truck, PlaneTakeoff } from 'lucide-react';
-
-// Add useEffect for document head modifications
-const useHeadTags = () => {
-  useEffect(() => {
-    // Create the meta tags for iOS full-screen mode
-    const metaTags = [
-      { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "viewport", content: "viewport-fit=cover, user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" },
-      { name: "apple-mobile-web-app-title", content: "Hobart Move" }
-    ];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Hobart Move">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='192' height='192'><rect width='100' height='100' rx='20' fill='%233b82f6' /><path d='M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z' fill='white' stroke='%231e40af' stroke-width='2'/></svg>">
+    <link rel="manifest" href="data:application/json,{'name':'Hobart Move Countdown','short_name':'Hobart Move','display':'standalone'}">
+    <title>Jayce, Jay & Cookie's Move to Hobart</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: linear-gradient(to bottom right, #e0f2fe, #ede9fe);
+            min-height: 100vh;
+        }
+        #root {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px;
+            background: linear-gradient(to bottom right, #f0f9ff, #e0e7ff);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #1e3a8a;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .date-display {
+            width: 100%;
+            max-width: 540px;
+            text-align: center;
+            margin-bottom: 32px;
+            color: #4b5563;
+            font-size: 18px;
+        }
+        .countdown-card {
+            width: 100%;
+            max-width: 540px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .countdown-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        .yellow-card {
+            background-color: #fef9c3;
+        }
+        .blue-card {
+            background-color: #dbeafe;
+        }
+        .green-card {
+            background-color: #dcfce7;
+        }
+        .purple-card {
+            background-color: #f3e8ff;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-info h3 {
+            margin: 0 0 4px 0;
+            color: #111827;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .card-info p {
+            margin: 0;
+            color: #4b5563;
+            font-size: 14px;
+        }
+        .card-info .note {
+            margin-top: 4px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        .card-days {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4338ca;
+        }
+        .card-days.complete {
+            color: #9ca3af;
+        }
+        .progress-bar {
+            margin-top: 12px;
+            height: 12px;
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease-in-out;
+        }
+        .yellow-fill {
+            background-color: #fbbf24;
+        }
+        .blue-fill {
+            background-color: #3b82f6;
+        }
+        .green-fill {
+            background-color: #22c55e;
+        }
+        .purple-fill {
+            background-color: #8b5cf6;
+        }
+        .tasmania-icon {
+            margin-top: 32px;
+            width: 96px;
+            height: 96px;
+        }
+        .tasmania-text {
+            margin-top: 8px;
+            color: #0f766e;
+            font-weight: 500;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
     
-    // Add the meta tags to the document head
-    metaTags.forEach(tag => {
-      const metaTag = document.createElement('meta');
-      metaTag.setAttribute('name', tag.name);
-      metaTag.setAttribute('content', tag.content);
-      document.head.appendChild(metaTag);
-    });
-    
-    // Create link for app icon (optional but recommended)
-    const linkTag = document.createElement('link');
-    linkTag.setAttribute('rel', 'apple-touch-icon');
-    linkTag.setAttribute('href', 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="192" height="192"><rect width="100" height="100" rx="20" fill="%233b82f6" /><path d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" fill="white" stroke="%231e40af" stroke-width="2"/></svg>');
-    document.head.appendChild(linkTag);
-    
-    // Create manifest.json link
-    const manifestLink = document.createElement('link');
-    manifestLink.setAttribute('rel', 'manifest');
-    manifestLink.setAttribute('href', 'data:application/json,{"name":"Hobart Move Countdown","short_name":"Hobart Move","display":"standalone"}');
-    document.head.appendChild(manifestLink);
-    
-    // Add title
-    document.title = "Jayce, Jay & Cookie's Move to Hobart";
-    
-    // Clean up function
-    return () => {
-      metaTags.forEach(tag => {
-        const elements = document.head.querySelectorAll(`meta[name="${tag.name}"]`);
-        elements.forEach(element => element.remove());
-      });
-      document.head.querySelectorAll('link[rel="apple-touch-icon"]').forEach(el => el.remove());
-      document.head.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
-    };
-  }, []);
-};
-
-const HobartCountdown = () => {
-  // Use the custom hook to add the head tags
-  useHeadTags();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  // Update the current date every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
-  
-  // Define the important dates
-  const dates = [
-    { 
-      name: "Settlement weekend", 
-      date: new Date("2025-05-30"), 
-      icon: <Calendar className="text-yellow-500" />,
-      color: "bg-yellow-100",
-      darkColor: "bg-yellow-500"
-    },
-    { 
-      name: "Notice to vacate Parramatta", 
-      date: new Date("2025-06-03"), 
-      icon: <Home className="text-blue-500" />,
-      color: "bg-blue-100",
-      darkColor: "bg-blue-500"
-    },
-    { 
-      name: "Vacate Parramatta", 
-      date: new Date("2025-06-22"), 
-      icon: <Truck className="text-green-500" />,
-      color: "bg-green-100",
-      darkColor: "bg-green-500",
-      note: "This is the date everything must be cleared from the house"
-    },
-    { 
-      name: "Leave Sydney for Hobart", 
-      date: new Date("2025-06-28"), 
-      icon: <PlaneTakeoff className="text-purple-500" />,
-      color: "bg-purple-100",
-      darkColor: "bg-purple-500"
-    }
-  ];
-  
-  // Calculate days remaining for each date
-  const calculateDaysRemaining = (targetDate) => {
-    const timeDiff = targetDate.getTime() - currentDate.getTime();
-    const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    return daysRemaining;
-  };
-  
-  // Format the date as DD Month YYYY
-  const formatDate = (date) => {
-    return date.toLocaleDateString('en-AU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
-  
-  return (
-    <div className="flex flex-col items-center p-8 bg-gradient-to-br from-teal-50 to-indigo-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-6 text-center text-indigo-900">
-        Jayce, Jay & Cookie's Move to Hobart
-      </h1>
-      
-      {/* Current date display */}
-      <div className="w-full max-w-xl text-center mb-8">
-        <p className="text-lg text-gray-600">Today is {formatDate(currentDate)}</p>
-      </div>
-      
-      {/* Countdown cards */}
-      <div className="w-full max-w-xl space-y-4">
-        {dates.map((item, index) => {
-          const daysRemaining = calculateDaysRemaining(item.date);
-          const percentComplete = 100 - (daysRemaining / 60 * 100);
-          const isPast = daysRemaining < 0;
-          
-          return (
-            <div key={index} className={`${item.color} rounded-lg p-4 shadow transition-all hover:shadow-md`}>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-3">
-                  {item.icon}
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-600">{formatDate(item.date)}</p>
-                    {item.note && <p className="text-xs text-gray-500 mt-1">{item.note}</p>}
-                  </div>
-                </div>
+    <script type="text/babel">
+        const CountdownApp = () => {
+            const [currentDate, setCurrentDate] = React.useState(new Date());
+            
+            React.useEffect(() => {
+                const timer = setInterval(() => {
+                    setCurrentDate(new Date());
+                }, 1000);
                 
-                <div className="flex flex-col items-end">
-                  {isPast ? (
-                    <span className="text-2xl font-bold text-gray-400">Complete!</span>
-                  ) : (
-                    <span className="text-2xl font-bold text-indigo-700">{daysRemaining} days</span>
-                  )}
+                return () => clearInterval(timer);
+            }, []);
+            
+            // Format the date as DD Month YYYY
+            const formatDate = (date) => {
+                return date.toLocaleDateString('en-AU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            };
+            
+            // Calculate days remaining for each date
+            const calculateDaysRemaining = (targetDate) => {
+                const timeDiff = targetDate.getTime() - currentDate.getTime();
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                return daysRemaining;
+            };
+            
+            // Define the important dates
+            const dates = [
+                { 
+                    name: "Settlement weekend", 
+                    date: new Date("2025-05-30"), 
+                    icon: "Calendar",
+                    color: "yellow",
+                    darkColor: "yellow"
+                },
+                { 
+                    name: "Notice to vacate Parramatta", 
+                    date: new Date("2025-06-03"), 
+                    icon: "Home",
+                    color: "blue",
+                    darkColor: "blue"
+                },
+                { 
+                    name: "Vacate Parramatta", 
+                    date: new Date("2025-06-22"), 
+                    icon: "Truck",
+                    color: "green",
+                    darkColor: "green",
+                    note: "This is the date everything must be cleared from the house"
+                },
+                { 
+                    name: "Leave Sydney for Hobart", 
+                    date: new Date("2025-06-28"), 
+                    icon: "PlaneTakeoff",
+                    color: "purple",
+                    darkColor: "purple"
+                }
+            ];
+            
+            return (
+                <div className="container">
+                    <h1>Jayce, Jay & Cookie's Move to Hobart</h1>
+                    
+                    {/* Current date display */}
+                    <div className="date-display">
+                        <p>Today is {formatDate(currentDate)}</p>
+                    </div>
+                    
+                    {/* Countdown cards */}
+                    <div style={{ width: '100%' }}>
+                        {dates.map((item, index) => {
+                            const daysRemaining = calculateDaysRemaining(item.date);
+                            const percentComplete = 100 - (daysRemaining / 60 * 100);
+                            const isPast = daysRemaining < 0;
+                            
+                            // Get the appropriate Lucide icon
+                            const Icon = lucide[item.icon];
+                            
+                            return (
+                                <div key={index} className={`countdown-card ${item.color}-card`}>
+                                    <div className="card-header">
+                                        <div className="card-left">
+                                            <div className="card-icon">
+                                                {Icon && <Icon color={`#${item.color === 'yellow' ? 'fbbf24' : 
+                                                                       item.color === 'blue' ? '3b82f6' : 
+                                                                       item.color === 'green' ? '22c55e' : '8b5cf6'}`} />}
+                                            </div>
+                                            <div className="card-info">
+                                                <h3>{item.name}</h3>
+                                                <p>{formatDate(item.date)}</p>
+                                                {item.note && <p className="note">{item.note}</p>}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            {isPast ? (
+                                                <span className="card-days complete">Complete!</span>
+                                            ) : (
+                                                <span className="card-days">{daysRemaining} days</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Progress bar */}
+                                    <div className="progress-bar">
+                                        <div 
+                                            className={`progress-fill ${item.color}-fill`}
+                                            style={{ width: `${Math.min(100, Math.max(0, percentComplete))}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    
+                    {/* Tasmania graphic */}
+                    <div style={{ textAlign: 'center' }}>
+                        <svg className="tasmania-icon" viewBox="0 0 100 100">
+                            <path 
+                                d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" 
+                                fill="#3b82f6" 
+                                stroke="#1e40af" 
+                                strokeWidth="2"
+                            />
+                        </svg>
+                        <p className="tasmania-text">Tasmania, here we come!</p>
+                    </div>
                 </div>
-              </div>
-              
-              {/* Progress bar */}
-              <div className="mt-3 h-3 w-full bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full ${item.darkColor} rounded-full transition-all duration-500 ease-in-out`}
-                  style={{ width: `${Math.min(100, Math.max(0, percentComplete))}%` }}
-                ></div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      {/* Tasmania graphic */}
-      <div className="mt-8 text-center">
-        <svg className="w-24 h-24 mx-auto text-teal-600" viewBox="0 0 100 100">
-          <path 
-            d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" 
-            fill="#3b82f6" 
-            stroke="#1e40af" 
-            strokeWidth="2"
-          />
-        </svg>
-        <p className="mt-2 text-lg font-medium text-teal-700">Tasmania, here we come!</p>
-      </div>
-    </div>
-  );
-};
-
-export default HobartCountdown;
+            );
+        };
+        
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<CountdownApp />);
+    </script>
+</body>
+</html>
