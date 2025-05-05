@@ -1,55 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Home, Truck, PlaneTakeoff } from 'lucide-react';
 
-// Add useEffect for document head modifications
-const useHeadTags = () => {
-  useEffect(() => {
-    // Create the meta tags for iOS full-screen mode
-    const metaTags = [
-      { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "viewport", content: "viewport-fit=cover, user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" },
-      { name: "apple-mobile-web-app-title", content: "Hobart Move" }
-    ];
-    
-    // Add the meta tags to the document head
-    metaTags.forEach(tag => {
-      const metaTag = document.createElement('meta');
-      metaTag.setAttribute('name', tag.name);
-      metaTag.setAttribute('content', tag.content);
-      document.head.appendChild(metaTag);
-    });
-    
-    // Create link for app icon (optional but recommended)
-    const linkTag = document.createElement('link');
-    linkTag.setAttribute('rel', 'apple-touch-icon');
-    linkTag.setAttribute('href', 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="192" height="192"><rect width="100" height="100" rx="20" fill="%233b82f6" /><path d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" fill="white" stroke="%231e40af" stroke-width="2"/></svg>');
-    document.head.appendChild(linkTag);
-    
-    // Create manifest.json link
-    const manifestLink = document.createElement('link');
-    manifestLink.setAttribute('rel', 'manifest');
-    manifestLink.setAttribute('href', 'data:application/json,{"name":"Hobart Move Countdown","short_name":"Hobart Move","display":"standalone"}');
-    document.head.appendChild(manifestLink);
-    
-    // Add title
-    document.title = "Jayce, Jay & Cookie's Move to Hobart";
-    
-    // Clean up function
-    return () => {
-      metaTags.forEach(tag => {
-        const elements = document.head.querySelectorAll(`meta[name="${tag.name}"]`);
-        elements.forEach(element => element.remove());
-      });
-      document.head.querySelectorAll('link[rel="apple-touch-icon"]').forEach(el => el.remove());
-      document.head.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
-    };
-  }, []);
-};
-
 const HobartCountdown = () => {
-  // Use the custom hook to add the head tags
-  useHeadTags();
   const [currentDate, setCurrentDate] = useState(new Date());
   
   // Update the current date every second
@@ -136,7 +88,6 @@ const HobartCountdown = () => {
                   <div>
                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
                     <p className="text-sm text-gray-600">{formatDate(item.date)}</p>
-                    {item.note && <p className="text-xs text-gray-500 mt-1">{item.note}</p>}
                   </div>
                 </div>
                 
