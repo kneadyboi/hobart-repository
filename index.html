@@ -88,6 +88,7 @@ const HobartCountdown = () => {
                   <div>
                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
                     <p className="text-sm text-gray-600">{formatDate(item.date)}</p>
+                    {item.note && <p className="text-xs text-gray-500 mt-1">{item.note}</p>}
                   </div>
                 </div>
                 
