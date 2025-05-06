@@ -1,132 +1,340 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Home, Truck, PlaneTakeoff } from 'lucide-react';
-
-const HobartCountdown = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  // Update the current date every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
-  
-  // Define the important dates
-  const dates = [
-    { 
-      name: "Settlement weekend", 
-      date: new Date("2025-05-30"), 
-      icon: <Calendar className="text-yellow-500" />,
-      color: "bg-yellow-100",
-      darkColor: "bg-yellow-500"
-    },
-    { 
-      name: "Notice to vacate Parramatta", 
-      date: new Date("2025-06-03"), 
-      icon: <Home className="text-blue-500" />,
-      color: "bg-blue-100",
-      darkColor: "bg-blue-500"
-    },
-    { 
-      name: "Vacate Parramatta", 
-      date: new Date("2025-06-22"), 
-      icon: <Truck className="text-green-500" />,
-      color: "bg-green-100",
-      darkColor: "bg-green-500",
-      note: "This is the date everything must be cleared from the house"
-    },
-    { 
-      name: "Leave Sydney for Hobart", 
-      date: new Date("2025-06-28"), 
-      icon: <PlaneTakeoff className="text-purple-500" />,
-      color: "bg-purple-100",
-      darkColor: "bg-purple-500"
-    }
-  ];
-  
-  // Calculate days remaining for each date
-  const calculateDaysRemaining = (targetDate) => {
-    const timeDiff = targetDate.getTime() - currentDate.getTime();
-    const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    return daysRemaining;
-  };
-  
-  // Format the date as DD Month YYYY
-  const formatDate = (date) => {
-    return date.toLocaleDateString('en-AU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
-  
-  return (
-    <div className="flex flex-col items-center p-8 bg-gradient-to-br from-teal-50 to-indigo-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-6 text-center text-indigo-900">
-        Jayce, Jay & Cookie's Move to Hobart
-      </h1>
-      
-      {/* Current date display */}
-      <div className="w-full max-w-xl text-center mb-8">
-        <p className="text-lg text-gray-600">Today is {formatDate(currentDate)}</p>
-      </div>
-      
-      {/* Countdown cards */}
-      <div className="w-full max-w-xl space-y-4">
-        {dates.map((item, index) => {
-          const daysRemaining = calculateDaysRemaining(item.date);
-          const percentComplete = 100 - (daysRemaining / 60 * 100);
-          const isPast = daysRemaining < 0;
-          
-          return (
-            <div key={index} className={`${item.color} rounded-lg p-4 shadow transition-all hover:shadow-md`}>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-3">
-                  {item.icon}
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-600">{formatDate(item.date)}</p>
-                    {item.note && <p className="text-xs text-gray-500 mt-1">{item.note}</p>}
-                  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jayce, Jay & Cookie's Move to Hobart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8faff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 650px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #5e45b2;
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .date-display {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .card {
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .card-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            margin-right: 15px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .card-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .card-date {
+            font-size: 14px;
+            font-weight: 300;
+        }
+        
+        .card-note {
+            font-size: 12px;
+            font-style: italic;
+            margin-top: 3px;
+            opacity: 0.8;
+        }
+        
+        .countdown {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: right;
+            min-width: 110px;
+        }
+        
+        .progress-container {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        /* Card-specific colors */
+        .settlement {
+            background-color: #fff9d9;
+        }
+        .settlement .progress-bar {
+            background-color: #ffcc00;
+        }
+        
+        .notice {
+            background-color: #e3f2fd;
+        }
+        .notice .progress-bar {
+            background-color: #2196f3;
+        }
+        
+        .vacate {
+            background-color: #e8f5e9;
+        }
+        .vacate .progress-bar {
+            background-color: #4caf50;
+        }
+        
+        .leave {
+            background-color: #f3e5f5;
+        }
+        .leave .progress-bar {
+            background-color: #9c27b0;
+        }
+        
+        .overall-progress {
+            margin-top: 30px;
+            background-color: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .overall-progress-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #5e45b2;
+            text-align: center;
+        }
+        
+        .overall-progress-container {
+            height: 15px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .overall-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ffcc00, #2196f3, #4caf50, #9c27b0);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .overall-dates {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #5e45b2;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .tasmania-shape {
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jayce, Jay & Cookie's Move to Hobart</h1>
+        <div class="date-display" id="current-date">Today is 6 May 2025</div>
+        
+        <div class="card settlement">
+            <div class="card-header">
+                <div class="card-info">
+                    <div class="card-icon">📅</div>
+                    <div class="card-details">
+                        <div class="card-title">Settlement weekend</div>
+                        <div class="card-date">30 May 2025</div>
+                    </div>
                 </div>
-                
-                <div className="flex flex-col items-end">
-                  {isPast ? (
-                    <span className="text-2xl font-bold text-gray-400">Complete!</span>
-                  ) : (
-                    <span className="text-2xl font-bold text-indigo-700">{daysRemaining} days</span>
-                  )}
-                </div>
-              </div>
-              
-              {/* Progress bar */}
-              <div className="mt-3 h-3 w-full bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full ${item.darkColor} rounded-full transition-all duration-500 ease-in-out`}
-                  style={{ width: `${Math.min(100, Math.max(0, percentComplete))}%` }}
-                ></div>
-              </div>
+                <div class="countdown" id="settlement-countdown">25 days</div>
             </div>
-          );
-        })}
-      </div>
-      
-      {/* Tasmania graphic */}
-      <div className="mt-8 text-center">
-        <svg className="w-24 h-24 mx-auto text-teal-600" viewBox="0 0 100 100">
-          <path 
-            d="M30,20 C35,15 45,15 50,20 C55,25 60,30 65,25 C70,20 75,25 80,30 C85,35 85,45 80,50 C75,55 70,60 75,65 C80,70 75,75 70,80 C65,85 55,85 50,80 C45,75 40,70 35,75 C30,80 25,75 20,70 C15,65 15,55 20,50 C25,45 30,40 25,35 C20,30 25,25 30,20 Z" 
-            fill="#3b82f6" 
-            stroke="#1e40af" 
-            strokeWidth="2"
-          />
-        </svg>
-        <p className="mt-2 text-lg font-medium text-teal-700">Tasmania, here we come!</p>
-      </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 40%"></div>
+            </div>
+        </div>
+        
+        <div class="card notice">
+            <div class="card-header">
+                <div class="card-info">
+                    <div class="card-icon">🏠</div>
+                    <div class="card-details">
+                        <div class="card-title">Notice to vacate Parramatta</div>
+                        <div class="card-date">3 June 2025</div>
+                    </div>
+                </div>
+                <div class="countdown" id="notice-countdown">29 days</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 35%"></div>
+            </div>
+        </div>
+        
+        <div class="card vacate">
+            <div class="card-header">
+                <div class="card-info">
+                    <div class="card-icon">🚚</div>
+                    <div class="card-details">
+                        <div class="card-title">Vacate Parramatta</div>
+                        <div class="card-date">22 June 2025</div>
+                        <div class="card-note">This is the date everything must be cleared from the house</div>
+                    </div>
+                </div>
+                <div class="countdown" id="vacate-countdown">48 days</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 20%"></div>
+            </div>
+        </div>
+        
+        <div class="card leave">
+            <div class="card-header">
+                <div class="card-info">
+                    <div class="card-icon">✈️</div>
+                    <div class="card-details">
+                        <div class="card-title">Leave Sydney for Hobart</div>
+                        <div class="card-date">28 June 2025</div>
+                    </div>
+                </div>
+                <div class="countdown" id="leave-countdown">54 days</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 10%"></div>
+            </div>
+        </div>
+        
+        <div class="overall-progress">
+            <div class="overall-progress-title">Overall Progress to Hobart</div>
+            <div class="overall-progress-container">
+                <div class="overall-progress-bar" id="overall-progress-bar" style="width: 20%"></div>
+            </div>
+            <div class="overall-dates">
+                <div>6 May 2025</div>
+                <div>28 Jun 2025</div>
+            </div>
+        </div>
+        
+        <div class="tasmania-shape">
+            <svg viewBox="0 0 100 100">
+                <path d="M30,20 Q60,10 70,30 Q90,60 60,80 Q20,90 30,50 Q20,30 30,20" fill="#5e45b2"/>
+            </svg>
+        </div>
+        
+        <div class="footer">Tasmania, here we come!</div>
     </div>
-  );
-};
 
-export default HobartCountdown;
+    <script>
+        // Calculate days between dates
+        function getDaysRemaining(targetDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const target = new Date(targetDate);
+            const timeDiff = target - today;
+            return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        }
+        
+        // Update all countdowns
+        function updateCountdowns() {
+            // Current date
+            const now = new Date();
+            document.getElementById('current-date').textContent = 
+                `Today is ${now.getDate()} ${now.toLocaleString('default', { month: 'long' })} ${now.getFullYear()}`;
+            
+            // First date and last date to calculate overall progress
+            const startDate = new Date(); // Today
+            const endDate = new Date('2025-06-28');
+            const totalJourneyDays = getDaysRemaining(endDate);
+            const totalJourneyLength = (endDate - startDate) / (1000 * 60 * 60 * 24);
+            const daysElapsed = totalJourneyLength - totalJourneyDays;
+            const overallProgress = (daysElapsed / totalJourneyLength) * 100;
+            
+            document.getElementById('overall-progress-bar').style.width = `${overallProgress}%`;
+            
+            // Update all milestones
+            const dates = [
+                { id: 'settlement-countdown', date: '2025-05-30' },
+                { id: 'notice-countdown', date: '2025-06-03' },
+                { id: 'vacate-countdown', date: '2025-06-22' },
+                { id: 'leave-countdown', date: '2025-06-28' }
+            ];
+            
+            dates.forEach(item => {
+                const days = getDaysRemaining(new Date(item.date));
+                document.getElementById(item.id).textContent = `${days} days`;
+                
+                // Calculate individual progress
+                const progressPercent = 100 - (days / totalJourneyDays * 100);
+                const progressBar = document.getElementById(item.id).closest('.card').querySelector('.progress-bar');
+                progressBar.style.width = `${progressPercent}%`;
+            });
+        }
+        
+        // Initial update
+        updateCountdowns();
+        
+        // Update every day
+        setInterval(updateCountdowns, 86400000); // 24 hours in milliseconds
+    </script>
+</body>
+</html>
